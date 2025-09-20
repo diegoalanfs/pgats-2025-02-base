@@ -10,8 +10,10 @@
             ],
             "freight": 15.50,
             "paymentMethod": "Boleto",
-            "total": 200
-        }
+            "total": 200,
+            "valorFinal": 200
+        },
+        "statusCode": 200
     },
     {
         "nomeDoTeste": "Checkout com o paymentMethod 'Cartão de Crédito'",
@@ -30,7 +32,9 @@
                 "expiry": "03/32",
                 "cvv": "123"
             },
-        "total": 400
-        }
+        "total": 400,
+        "valorFinal": 400
+        },
+        "statusCode": 200
     }
 ]
