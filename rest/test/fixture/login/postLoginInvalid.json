@@ -1,0 +1,38 @@
+[
+    {
+        "nomeDoTeste": "login com senha inválida",
+        "postLoginInvalid": {
+            "email": "bob@email.com",
+            "password": "invalid"
+        },
+        "statusCode": 401,
+        "mensagemEsperada": "Credenciais inválidas"
+    },
+    {
+        "nomeDoTeste": "login com e-mail inválido",
+        "postLoginInvalid": {
+            "email": "invalid@email.com",
+            "password": "123456"
+        },
+        "statusCode": 401,
+        "mensagemEsperada": "Credenciais inválidas"
+    },
+    {
+        "nomeDoTeste": "login com senha vazio",
+        "postLoginInvalid": {
+            "email": "bob@email.com",
+            "password": "  "
+        },
+        "statusCode": 401,
+        "mensagemEsperada": "Credenciais inválidas"
+    },
+    {
+        "nomeDoTeste": "login com e-mail vazio",
+        "postLoginInvalid": {
+            "email": "  ",
+            "password": "invalid"
+        },
+        "statusCode": 401,
+        "mensagemEsperada": "Credenciais inválidas"
+    }
+]

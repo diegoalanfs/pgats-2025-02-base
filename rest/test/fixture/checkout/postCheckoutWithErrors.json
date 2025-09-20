@@ -1,0 +1,34 @@
+[
+   {
+        "nomeDoTeste": "requisição com productId inválido",
+        "postCheckout": {
+            "items": [
+                {
+                    "productId": 999,
+                    "quantity": 2
+                }
+            ],
+            "freight": 15.50,
+            "paymentMethod": "Boleto"
+        },
+        "statusCode": 400,
+        "mensagemEsperada": "Produto não encontrado"
+    },
+    {
+        "nomeDoTeste": "requisição com items vazios ou ausentes (Cartão de Crédito)",
+        "postCheckout": {
+            "items": [
+                {
+                    "productId": 2,
+                    "quantity": 2
+                }
+            ],
+            "freight": 50.00,
+            "paymentMethod": "Cartão de Crédito",
+            "cardData": {},
+        "total": 400
+        },
+        "statusCode": 400,
+        "mensagemEsperada": "Dados do cartão obrigatórios para pagamento com cartão"
+    }
+]
