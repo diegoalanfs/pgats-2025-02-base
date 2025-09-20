@@ -1,37 +1,30 @@
 const request = require('supertest');
-const sinon = require('sinon');
-const { expect } = require('chai');
-const app = require('../../../rest/app');
-const checkoutService = require('../../../src/services/checkoutService');
+const chai = require('chai');
+const { expect } = chai;
 
-describe('Checkout Controller', () => {
+const http = 'http://localhost:3000';
+
+describe('Checkout External', () => {
     before(async () => {
         const postLogin = require('../fixture/login/postLogin.json');
-
-        const respostaLogin = await request(app)
+        const respostaLogin = await request(http)
             .post('/api/users/login')
             .send(postLogin);
         token = respostaLogin.body.token;
     });
 
-    afterEach(() => {
-        sinon.restore();
-    })
-
     const testesComSucesso = require('../fixture/checkout/postCheckout.json');
-    const respostasEsperadas = require('../fixture/response/respPostCheckout.json');
+    const respostasEsperadas = require('../fixture/response/respCheckoutExternal.json');
     testesComSucesso.forEach((teste, idx) => {
         const respEsperada = respostasEsperadas[idx];
         it(`Quando eu realizar um ${teste.nomeDoTeste} devo receber ${respEsperada.statusCode}`, async () => {
-            const checkoutServiceMock = sinon.stub(checkoutService, 'checkout');
-            checkoutServiceMock.returns(teste.postCheckout);
-
-            const resposta = await request(app)
+            const resposta = await request(http)
                 .post('/api/checkout')
                 .set('Authorization', `Bearer ${token}`)
                 .send(teste.postCheckout);
 
             expect(resposta.status).to.equal(respEsperada.statusCode);
+            delete respEsperada.postCheckout.cardData;
             expect(resposta.body).to.deep.equal(respEsperada.postCheckout);
         });
     });
@@ -39,10 +32,7 @@ describe('Checkout Controller', () => {
     const testesDeErros = require('../fixture/checkout/postCheckoutWithErrors.json');
     testesDeErros.forEach((teste) => {
         it(`Quando eu realizar um ${teste.nomeDoTeste} devo receber ${teste.statusCode}`, async () => {
-            const checkoutServiceMock = sinon.stub(checkoutService, 'checkout');
-            checkoutServiceMock.throws(new Error(teste.mensagemEsperada));
-
-            const resposta = await request(app)
+            const resposta = await request(http)
                 .post('/api/checkout')
                 .set('Authorization', `Bearer ${token}`)
                 .send(teste.postCheckout);
@@ -53,10 +43,7 @@ describe('Checkout Controller', () => {
     });
 
     it(`Quando eu realizar um requisição sem o token de autenticação devo receber 401`, async () => {
-        const checkoutServiceMock = sinon.stub(checkoutService, 'checkout');
-        checkoutServiceMock.throws(new Error('Token inválido'));
-
-        const resposta = await request(app)
+        const resposta = await request(http)
             .post('/api/checkout')
             .set('Authorization', `Bearer token-invalido`)
             .send(testesComSucesso[0].postCheckout);

@@ -2,6 +2,7 @@
     {
         "nomeDoTeste": "Checkout com o paymentMethod 'Boleto'",
         "postCheckout": {
+            "userId": 2,
             "items": [
                 {
                     "productId": 1,
@@ -10,14 +11,15 @@
             ],
             "freight": 15.50,
             "paymentMethod": "Boleto",
-            "total": 200,
-            "valorFinal": 200
+            "total": 215.50,
+            "valorFinal": 215.50
         },
         "statusCode": 200
     },
     {
         "nomeDoTeste": "Checkout com o paymentMethod 'Cartão de Crédito'",
         "postCheckout": {
+            "userId": 2,
             "items": [
                 {
                     "productId": 2,
@@ -25,15 +27,15 @@
                 }
             ],
             "freight": 50.00,
-            "paymentMethod": "Cartão de Crédito",
+            "paymentMethod": "credit_card",
             "cardData": {
                 "number": "1234 4564 1234 1234",
                 "name": "Nome Faker",
                 "expiry": "03/32",
                 "cvv": "123"
             },
-        "total": 400,
-        "valorFinal": 400
+        "total": 427.50,
+        "valorFinal": 427.50
         },
         "statusCode": 200
     }

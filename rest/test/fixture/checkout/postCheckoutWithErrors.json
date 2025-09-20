@@ -24,8 +24,7 @@
                 }
             ],
             "freight": 50.00,
-            "paymentMethod": "Cartão de Crédito",
-            "cardData": {},
+            "paymentMethod": "credit_card",
         "total": 400
         },
         "statusCode": 400,
