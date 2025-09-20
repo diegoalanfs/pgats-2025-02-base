@@ -1,6 +1,7 @@
 const request = require('supertest');
 const chai = require('chai');
 const { expect } = require('chai');
+const { faker } = require('@faker-js/faker');
 
 const http = 'http://localhost:3000';
 
@@ -8,6 +9,7 @@ describe('User External', () => {
     describe('Validar o Registro de Usuário', () => {
         it(`Quando eu realizar um registro de um novo usuário com dados válidos devo receber 201`, async () => {
             const registroComSucesso = require('../fixture/register/registerUser.json');
+            registroComSucesso.email = faker.internet.email();
 
             const resposta = await request(http)
                 .post('/api/users/register')
