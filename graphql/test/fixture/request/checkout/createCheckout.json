@@ -1,0 +1,40 @@
+[
+    {
+        "nomeDoTeste": "Checkout com o paymentMethod 'Boleto'",
+        "checkout": {
+            "query": "mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!) {checkout(items: $items, freight: $freight, paymentMethod: $paymentMethod) {valorFinal}}",
+            "variables": {
+                "items": [
+                    {
+                        "quantity": 1,
+                        "productId": 2
+                    }
+                ],
+                "freight": 15.5,
+                "paymentMethod": "boleto"
+            }
+        }
+    },
+    {
+        "nomeDoTeste": "Checkout com o paymentMethod 'Cartão de Crédito'",
+        "checkout": {
+            "query": "mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!, $cardData: CardDataInput) {checkout(items: $items, freight: $freight, paymentMethod: $paymentMethod, cardData: $cardData) {valorFinal}}",
+            "variables": {
+                "items": [
+                    {
+                        "quantity": 2,
+                        "productId": 2
+                    }
+                ],
+                "freight": 50,
+                "paymentMethod": "credit_card",
+                "cardData": {
+                    "number": "1234 5678 9123 456",
+                    "name": "Faker Name",
+                    "expiry": "03/32",
+                    "cvv": "123"
+                }
+            }
+        }
+    }
+]
