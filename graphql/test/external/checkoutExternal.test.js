@@ -7,47 +7,47 @@ const http = 'http://localhost:4000/graphql';
 describe('Checkout External with GraphQL', () => {
     before(async () => {
         const loginUser = require('../fixture/request/login/loginUser.json');
-        const respostaLogin = await request(http)
+        const respLogin = await request(http)
             .post('')
             .send(loginUser);
-        token = respostaLogin.body.data.login.token;
+        token = respLogin.body.data.login.token;
     });
 
-    const testesComSucesso = require('../fixture/request/checkout/createCheckout.json');
-    const respostasEsperadas = require('../fixture/response/respCheckout.json');
-    testesComSucesso.forEach((teste, idx) => {
-        const respEsperada = respostasEsperadas[idx];
-        it(`Quando eu realizar um ${teste.nomeDoTeste} devo receber ${respEsperada.statusCode}`, async () => {
-            const resposta = await request(http)
+    const successfulTests = require('../fixture/request/checkout/createCheckout.json');
+    const expectedResponses = require('../fixture/response/respCheckout.json');
+    successfulTests.forEach((test, idx) => {
+        const expectedResp = expectedResponses[idx];
+        it(`Quando eu realizar um ${test.nomeDoTeste} devo receber ${expectedResp.statusCode}`, async () => {
+            const resp = await request(http)
                 .post('')
                 .set('Authorization', `Bearer ${token}`)
-                .send(teste.checkout);
+                .send(test.checkout);
 
-            expect(resposta.status).to.equal(respEsperada.statusCode);
-            expect(resposta.body.data.checkout.valorFinal).to.deep.equal(respEsperada.valorFinal);
+            expect(resp.status).to.equal(expectedResp.statusCode);
+            expect(resp.body.data.checkout.valorFinal).to.deep.equal(expectedResp.valorFinal);
         });
     });
 
-    const testesDeErros = require('../fixture/request/checkout/createCheckoutWithErros.json');
-    testesDeErros.forEach((teste) => {
-        it(`Quando eu realizar um ${teste.nomeDoTeste} devo receber uma mensagem`, async () => {
-            const respostaCheckout = await request(http)
+    const erroTests = require('../fixture/request/checkout/createCheckoutWithErros.json');
+    erroTests.forEach((test) => {
+        it(`Quando eu realizar um ${test.nomeDoTeste} devo receber uma mensagem`, async () => {
+            const respCheckout = await request(http)
                 .post('')
                 .set('Authorization', `Bearer ${token}`)
-                .send(teste.checkout);
+                .send(test.checkout);
 
-            expect(respostaCheckout.status).to.equal(teste.statusCode);
-            expect(respostaCheckout.body.errors[0].message).to.equal(teste.mensagemEsperada);
+            expect(respCheckout.status).to.equal(test.statusCode);
+            expect(respCheckout.body.errors[0].message).to.equal(test.mensagemEsperada);
         });
     });
 
-    it(`Quando eu realizar um requisição sem o token de autenticação devo receber 401`, async () => {
-         const respostaCheckout = await request(http)
+    it(`Quando eu realizar um requisição sem o token de autenticação`, async () => {
+         const respCheckout = await request(http)
              .post('')
              .set('Authorization', `Bearer token-invalido`)
-             .send(testesComSucesso[0].checkout);
+             .send(successfulTests[0].checkout);
  
-         expect(respostaCheckout.status).to.equal(200);
-         expect(respostaCheckout.body.errors[0].message).to.equal('Token inválido');
+         expect(respCheckout.status).to.equal(200);
+         expect(respCheckout.body.errors[0].message).to.equal('Token inválido');
      });
 });

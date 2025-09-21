@@ -4,37 +4,37 @@ const { expect } = require('chai');
 const app = require('../../../rest/app');
 const userService = require('../../../src/services/userService');
 
-describe('User Controller', () => {
+describe('User Controller with API Rest', () => {
     afterEach(() => {
         sinon.restore();
     })
 
     describe('Validar o Registro de Usuário', () => {
         it(`Quando eu realizar um registro de um novo usuário com dados válidos devo receber 201`, async () => {
-            const registroComSucesso = require('../fixture/register/registerUser.json');
+            const successfulRegister = require('../fixture/register/registerUser.json');
             const userServiceMock = sinon.stub(userService, 'registerUser');
-            userServiceMock.returns(registroComSucesso);
+            userServiceMock.returns(successfulRegister);
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/api/users/register')
-                .send(registroComSucesso);
+                .send(successfulRegister);
 
-            expect(resposta.status).to.equal(201);
-            expect(resposta.body.user).to.have.property('name', registroComSucesso.name);
-            expect(resposta.body.user).to.have.property('email', registroComSucesso.email);
+            expect(resp.status).to.equal(201);
+            expect(resp.body.user).to.have.property('name', successfulRegister.name);
+            expect(resp.body.user).to.have.property('email', successfulRegister.email);
         });
 
         it(`Quando eu realizar um registro com um e-mail já cadastrado devo receber 400`, async () => {
-            const registroJaExistente = require('../fixture/register/registerUserWithErros.json');
+            const existingRegister = require('../fixture/register/registerUserWithErros.json');
             const userServiceMock = sinon.stub(userService, 'registerUser');
             userServiceMock.returns(null);
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/api/users/register')
-                .send(registroJaExistente);
+                .send(existingRegister);
 
-            expect(resposta.status).to.equal(400);
-            expect(resposta.body).to.have.property('error', 'Email já cadastrado');
+            expect(resp.status).to.equal(400);
+            expect(resp.body).to.have.property('error', 'Email já cadastrado');
         });
     })
 
@@ -45,12 +45,12 @@ describe('User Controller', () => {
                 const userServiceMock = sinon.stub(userService, 'authenticate');
                 userServiceMock.returns(null);
 
-                const resposta = await request(app)
+                const resp = await request(app)
                     .post('/api/users/login')
                     .send(teste.postLoginInvalid);
 
-                expect(resposta.status).to.equal(teste.statusCode);
-                expect(resposta.body).to.have.property('error', teste.mensagemEsperada);
+                expect(resp.status).to.equal(teste.statusCode);
+                expect(resp.body).to.have.property('error', teste.mensagemEsperada);
             });
         });
 
@@ -60,12 +60,12 @@ describe('User Controller', () => {
             const userServiceMock = sinon.stub(userService, 'authenticate');
             userServiceMock.returns(token);
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/api/users/login')
                 .send(postLogin);
 
-            expect(resposta.status).to.equal(200);
-            expect(resposta.body).to.deep.equal(token);
+            expect(resp.status).to.equal(200);
+            expect(resp.body).to.deep.equal(token);
         });
     })
 });
