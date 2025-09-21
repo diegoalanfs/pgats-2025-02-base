@@ -1,0 +1,12 @@
+[
+    {
+        "nomeDoTeste": "Checkout com o paymentMethod 'Boleto'",
+        "valorFinal": 215.50,
+        "statusCode": 200
+    },
+    {
+        "nomeDoTeste": "Checkout com o paymentMethod 'Cartão de Crédito'",
+        "valorFinal": 427.50,
+        "statusCode": 200
+    }
+]

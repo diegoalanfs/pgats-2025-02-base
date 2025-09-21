@@ -9,6 +9,7 @@ describe('User External', () => {
     describe('Validar o Registro de Usuário', () => {
         it(`Quando eu realizar um registro de um novo usuário com dados válidos devo receber 201`, async () => {
             const registroComSucesso = require('../fixture/register/registerUser.json');
+            registroComSucesso.name = faker.name.firstName();
             registroComSucesso.email = faker.internet.email();
 
             const resposta = await request(http)

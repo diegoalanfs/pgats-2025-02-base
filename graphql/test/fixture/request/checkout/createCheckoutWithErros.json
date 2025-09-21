@@ -1,0 +1,38 @@
+[
+    {
+        "nomeDoTeste": "requisição com productId inválido",
+        "checkout": {
+            "query": "mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!) {checkout(items: $items, freight: $freight, paymentMethod: $paymentMethod) {valorFinal}}",
+            "variables": {
+                "items": [
+                    {
+                        "quantity": -1,
+                        "productId": 1000
+                    }
+                ],
+                "freight": 15.5,
+                "paymentMethod": "boleto"
+            }
+        },
+        "statusCode": 200,
+        "mensagemEsperada": "Produto não encontrado"
+    },
+    {
+        "nomeDoTeste": "requisição com items vazios ou ausentes (Cartão de Crédito)",
+        "checkout": {
+            "query": "mutation Checkout($items: [CheckoutItemInput!]!, $freight: Float!, $paymentMethod: String!, $cardData: CardDataInput) {checkout(items: $items, freight: $freight, paymentMethod: $paymentMethod, cardData: $cardData) {valorFinal}}",
+            "variables": {
+                "items": [
+                    {
+                        "quantity": 2,
+                        "productId": 2
+                    }
+                ],
+                "freight": 50,
+                "paymentMethod": "credit_card"
+            }
+        },
+        "statusCode": 200,
+        "mensagemEsperada": "Dados do cartão obrigatórios para pagamento com cartão"
+    }
+]
