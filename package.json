@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "test-rest": "mocha rest/test/**/**/*.test.js --timeout 10000 --reporter mochawesome",
+    "test-graphql": "mocha graphql/test/**/**/*.test.js --timeout 10000 --reporter mochawesome",
     "test-rest-controller": "mocha rest/test/controller/**/*.test.js --timeout 10000 --reporter mochawesome",
+    "test-graphql-controller": "mocha graphql/test/controller/**/*.test.js --timeout 10000 --reporter mochawesome",
     "test-rest-external": "mocha rest/test/external/**/*.test.js --timeout 10000 --reporter mochawesome",
     "test-graphql-external": "mocha graphql/test/external/**/*.test.js --timeout 10000 --reporter mochawesome",
     "start-rest": "node rest/server.js",
