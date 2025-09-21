@@ -4,7 +4,7 @@ const { expect } = require('chai');
 const app = require('../../../rest/app');
 const checkoutService = require('../../../src/services/checkoutService');
 
-describe('Checkout Controller', () => {
+describe('Checkout Controller with API Rest', () => {
     before(async () => {
         const postLogin = require('../fixture/login/postLogin.json');
 
@@ -18,37 +18,37 @@ describe('Checkout Controller', () => {
         sinon.restore();
     })
 
-    const testesComSucesso = require('../fixture/checkout/postCheckout.json');
-    const respostasEsperadas = require('../fixture/response/respPostCheckout.json');
-    testesComSucesso.forEach((teste, idx) => {
-        const respEsperada = respostasEsperadas[idx];
-        it(`Quando eu realizar um ${teste.nomeDoTeste} devo receber ${respEsperada.statusCode}`, async () => {
+    const successfulTests = require('../fixture/checkout/postCheckout.json');
+    const expectedResponses = require('../fixture/response/respPostCheckout.json');
+    successfulTests.forEach((test, idx) => {
+        const expectedResp = expectedResponses[idx];
+        it(`Quando eu realizar um ${test.nomeDoTeste} devo receber ${expectedResp.statusCode}`, async () => {
             const checkoutServiceMock = sinon.stub(checkoutService, 'checkout');
-            checkoutServiceMock.returns(teste.postCheckout);
+            checkoutServiceMock.returns(test.postCheckout);
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/api/checkout')
                 .set('Authorization', `Bearer ${token}`)
-                .send(teste.postCheckout);
+                .send(test.postCheckout);
 
-            expect(resposta.status).to.equal(respEsperada.statusCode);
-            expect(resposta.body).to.deep.equal(respEsperada.postCheckout);
+            expect(resp.status).to.equal(expectedResp.statusCode);
+            expect(resp.body).to.deep.equal(expectedResp.postCheckout);
         });
     });
 
-    const testesDeErros = require('../fixture/checkout/postCheckoutWithErrors.json');
-    testesDeErros.forEach((teste) => {
-        it(`Quando eu realizar um ${teste.nomeDoTeste} devo receber ${teste.statusCode}`, async () => {
+    const erroTests = require('../fixture/checkout/postCheckoutWithErrors.json');
+    erroTests.forEach((test) => {
+        it(`Quando eu realizar um ${test.nomeDoTeste} devo receber ${test.statusCode}`, async () => {
             const checkoutServiceMock = sinon.stub(checkoutService, 'checkout');
-            checkoutServiceMock.throws(new Error(teste.mensagemEsperada));
+            checkoutServiceMock.throws(new Error(test.mensagemEsperada));
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/api/checkout')
                 .set('Authorization', `Bearer ${token}`)
-                .send(teste.postCheckout);
+                .send(test.postCheckout);
 
-            expect(resposta.status).to.equal(teste.statusCode);
-            expect(resposta.body).to.have.property('error', teste.mensagemEsperada);
+            expect(resp.status).to.equal(test.statusCode);
+            expect(resp.body).to.have.property('error', test.mensagemEsperada);
         });
     });
 
@@ -56,12 +56,12 @@ describe('Checkout Controller', () => {
         const checkoutServiceMock = sinon.stub(checkoutService, 'checkout');
         checkoutServiceMock.throws(new Error('Token inválido'));
 
-        const resposta = await request(app)
+        const resp = await request(app)
             .post('/api/checkout')
             .set('Authorization', `Bearer token-invalido`)
-            .send(testesComSucesso[0].postCheckout);
+            .send(successfulTests[0].postCheckout);
 
-        expect(resposta.status).to.equal(401);
-        expect(resposta.body).to.have.property('error', 'Token inválido');
+        expect(resp.status).to.equal(401);
+        expect(resp.body).to.have.property('error', 'Token inválido');
     });
 });

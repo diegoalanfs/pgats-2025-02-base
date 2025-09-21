@@ -12,48 +12,48 @@ describe('User Controller with GraphQL', () => {
 
     describe('Validar o Registro de Usuário', () => {
         it(`Quando eu realizar um registro de um novo usuário com dados válidos devo receber 200`, async () => {
-            const registroComSucesso = require('../fixture/request/register/registerUser.json');
+            const successfulRegister = require('../fixture/request/register/registerUser.json');
             const userServiceMock = sinon.stub(userService, 'registerUser');
-            registroComSucesso.variables.name = faker.name.firstName();
-            registroComSucesso.variables.email = faker.internet.email();
-            userServiceMock.returns({ name: registroComSucesso.variables.name, email: registroComSucesso.variables.email});
+            successfulRegister.variables.name = faker.name.firstName();
+            successfulRegister.variables.email = faker.internet.email();
+            userServiceMock.returns({ name: successfulRegister.variables.name, email: successfulRegister.variables.email});
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/graphql')
-                .send(registroComSucesso);
+                .send(successfulRegister);
 
-            expect(resposta.status).to.equal(200);
-            expect(resposta.body.data.register).to.have.property('name', registroComSucesso.variables.name);
-            expect(resposta.body.data.register).to.have.property('email', registroComSucesso.variables.email);
+            expect(resp.status).to.equal(200);
+            expect(resp.body.data.register).to.have.property('name', successfulRegister.variables.name);
+            expect(resp.body.data.register).to.have.property('email', successfulRegister.variables.email);
         });
 
         it(`Quando eu realizar um registro com um e-mail já cadastrado`, async () => {
-            const registroJaExistente = require('../fixture/request/register/registerUserWithErros.json');
+            const existingRegister = require('../fixture/request/register/registerUserWithErros.json');
             const userServiceMock = sinon.stub(userService, 'registerUser');
             userServiceMock.returns(null);
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/graphql')
-                .send(registroJaExistente);
+                .send(existingRegister);
 
-            expect(resposta.status).to.equal(200);
-            expect(resposta.body.errors[0].message).to.equal('Email já cadastrado');
+            expect(resp.status).to.equal(200);
+            expect(resp.body.errors[0].message).to.equal('Email já cadastrado');
         });
     })
 
     describe('Validar o Login de Usuário', () => {
         const postLoginInvalid = require('../fixture/request/login/loginUserInvalid.json');
-        postLoginInvalid.forEach((teste) => {
-            it(`Quando eu realizar um ${teste.nomeDoTeste}`, async () => {
+        postLoginInvalid.forEach((test) => {
+            it(`Quando eu realizar um ${test.nomeDoTeste}`, async () => {
                 const userServiceMock = sinon.stub(userService, 'authenticate');
                 userServiceMock.returns(null);
 
-                const resposta = await request(app)
+                const resp = await request(app)
                     .post('/graphql')
-                    .send(teste.login);
+                    .send(test.login);
 
-                expect(resposta.status).to.equal(teste.statusCode);
-                expect(resposta.body.errors[0].message).to.equal(teste.mensagemEsperada);
+                expect(resp.status).to.equal(test.statusCode);
+                expect(resp.body.errors[0].message).to.equal(test.mensagemEsperada);
             });
         });
 
@@ -63,12 +63,12 @@ describe('User Controller with GraphQL', () => {
             const userServiceMock = sinon.stub(userService, 'authenticate');
             userServiceMock.returns(token);
 
-            const resposta = await request(app)
+            const resp = await request(app)
                 .post('/graphql')
                 .send(login);
 
-            expect(resposta.status).to.equal(200);
-            expect(resposta.body.data.login).to.deep.equal(token);
+            expect(resp.status).to.equal(200);
+            expect(resp.body.data.login).to.deep.equal(token);
         });
     })
 });
